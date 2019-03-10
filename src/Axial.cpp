@@ -87,3 +87,8 @@ bool HexPoint::operator==(const HexPoint &other) const
 {
     return (this->q == other.q && this->r == other.r);
 }
+
+bool HexPoint::operator<(const HexPoint &other) const
+{
+    return (CubePoint(*this) < CubePoint(other));
+}

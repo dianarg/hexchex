@@ -37,6 +37,7 @@ class HexPoint
         HexPoint(const CubePoint &cube);
         ~HexPoint() = default;
         bool operator==(const HexPoint &other) const;
+        bool operator<(const HexPoint &other) const;
     private:
         int q;
         int r;

@@ -14,3 +14,7 @@ make test
 
 # To see longer gtest output and test failures:
 make check
+
+# Run individual unit tests with:
+cd build
+./unit_test --gtest_filter=TestName[*]

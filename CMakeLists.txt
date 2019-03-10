@@ -15,6 +15,9 @@ set (CMAKE_CXX_STANDARD 11)
 file(GLOB_RECURSE LIB_SOURCES src/*.cpp)
 list(REMOVE_ITEM LIB_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp)
 
+## MAIN PROGRAM
+add_executable(hexchex ${LIB_SOURCES} src/main.cpp)
+
 ## TESTS
 file(GLOB_RECURSE TEST_SOURCES test/*.cpp)
 add_executable(unit_test ${TEST_SOURCES} ${LIB_SOURCES})
@@ -47,7 +50,6 @@ execute_process(COMMAND ${CMAKE_COMMAND} --build .
   RESULT_VARIABLE result
   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/googletest-download )
 if(result)
-#  message(FATAL_ERROR "Build step for googletest failed: ${result}")
   message(WARNING "Build step for googletest failed: ${result}")
 endif()
 # Add googletest directly to our build. This defines
