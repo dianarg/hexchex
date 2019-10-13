@@ -1,84 +1,141 @@
 #include "Board.h"
 
-#include <iostream> // for DisplayBoard
-
 Board::Board()
 {
-    int r = -8;
-    // top center
-    int bq = 4;
-    int eq = 4;
-    for (int row = 0; row < 4; ++row) {
-        for (bq = eq - row; bq<=eq; bq++) {
-            state[{bq, r}] = 'C';
-        }
-        ++r;
-    }
-    // TODO: split left and right into different players, use o for center
-    // top left and right
-    for (int row = 0; row < 4; ++row) {
-        bq = -4;
-        for (eq = 8-row; bq <= eq; ++bq) {
-            state[{bq, r}] = 'G';
-        }
-        ++r;
-    }
-    // center
-    bq = -4;
-    eq = 4;
-    for (; bq <= eq; ++bq) {
-        state[{bq, r}] = 'o';
-    }
-    ++r;
+    // Players 1-6, numbered from top counterclockwise
 
-    // bottom left and right
-    for (int row = 0; row < 4; ++row) {
-        eq = 4;
-        for (bq = eq - row - 8; bq <= eq; ++bq) {
-            state[{bq, r}] = 'R';
-        }
-        ++r;
-    }
+    // player 1
+    SetTopStart('1');
 
-    // bottom center
-    for (int row = 0; row < 4; ++row) {
-        bq = -4;
-        for (eq = 0-row-1; bq <= eq; ++bq) {
-            state[{bq, r}] = 'U';
+    // player 2
+    SetUpperLeftStart('2');
+
+    // player 3
+    SetLowerLeftStart('3');
+
+    // player 4
+    SetBottomStart('4');
+
+    // player 5
+    SetLowerRightStart('5');
+
+    // player 6
+    SetUpperRightStart('6');
+
+    // board center
+    SetCenter('o');
+}
+
+void Board::SetTopStart(char c)
+{
+    int width = 4;
+    for (int r = -5; r >= -8; --r) {
+        for (int q = 4 - width + 1; q <= 4 ; ++q) {
+            _state[{q, r}] = c;
         }
-        ++r;
+        --width;
     }
 }
 
+void Board::SetUpperLeftStart(char c)
+{
+    int width = 4;
+    for (int r = -4; r <= 0; ++r) {
+        for (int q = -4; q < -4+width; ++q) {
+            _state[{q, r}] = c;
+        }
+        --width;
+    }
+}
 
-void DisplayBoard(const Board &board)
+void Board::SetLowerLeftStart(char c)
+{
+    int width = 1;
+    for (int r = 1; r <= 4; ++r) {
+        for (int q = -5; q >= -4 - width; --q) {
+            _state[{q, r}] = '3';
+        }
+        ++width;
+    }
+}
+
+void Board::SetBottomStart(char c)
+{
+    int width = 4;
+    for (int r = 5; r <= 8; ++r) {
+        for (int q = -4; q < -4 + width; ++q) {
+            _state[{q, r}] = '4';
+        }
+        --width;
+    }
+}
+
+void Board::SetLowerRightStart(char c)
+{
+    int width = 1;
+    for (int r = 0; r <= 4; ++r) {
+        for (int q = 4; q > 4 - width + 1; --q) {
+            _state[{q, r}] = '5';
+        }
+        ++width;
+    }
+}
+
+void Board::SetUpperRightStart(char c)
+{
+    int width = 4;
+    for (int r = -4; r <= -1; ++r) {
+        for (int q = 5; q < 5 + width; ++q) {
+            _state[{q, r}] = '6';
+        }
+        --width;
+    }
+}
+
+void Board::SetCenter(char c)
+{
+    CubePoint center {0, 0, 0};
+    // fill in all cells at dist from center, converting from cube to hex
+    int dist = 4;
+    for (int x = -dist; x <= dist; ++x) {
+        for (int y = std::max(-dist, -x-dist); y <= std::min(dist, -x+dist); ++y) {
+            // cube constraint: x+y+z=0
+            int z = -x-y;
+            CubePoint cube {x, y, z};
+            _state[cube] = 'o';
+        }
+    }
+}
+
+void Board::Display(std::ostream& os) const
 {
     // print q axis
-    std::cout << "   ";
+    os << "   ";
     for (int q = -8; q <= 8; ++q) {
-        std::cout << (q < 0 ? -q : q) << " ";
+        os << (q < 0 ? -q : q) << " ";
     }
-    std::cout << std::endl;
+    os << std::endl;
     int r = -8;
     for (int row = 0; row <= 17; ++row) {
         if (r>=0) {
-            std::cout << " ";
+            os << " ";
         }
-        std::cout << r << " ";
+        // print r labels
+        os << r << " ";
 
         int q = -8;
+        // print filled or empty cells
         for (int col = 0; col <= 17; ++col) {
-            auto cell = board.state.find({q,r});
-            if (cell != board.state.end()) {
-                std::cout << cell->second << " ";
+            auto cell = _state.find({q,r});
+            if (cell != _state.end()) {
+                os << cell->second << " ";
             }
             else {
-                std::cout << ". ";
+                os << ". ";
             }
             ++q;
         }
-        std::cout << std::endl;
+        os << std::endl;
         ++r;
     }
-
 }

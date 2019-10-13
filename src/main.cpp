@@ -1,8 +1,9 @@
 #include "Board.h"
 
+#include <iostream>
+
 int main()
 {
     Board board;
-
-    DisplayBoard(board);
+    board.Display(std::cout);
 }
