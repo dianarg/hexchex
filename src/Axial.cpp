@@ -1,5 +1,5 @@
 #include "Axial.h"
-
+#include <iostream>
 CubePoint::CubePoint()
     : x(0), y(0), z(0)
 {

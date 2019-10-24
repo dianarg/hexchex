@@ -1,5 +1,7 @@
 #include "Board.h"
 
+#include <iostream>
+
 Board::Board()
 {
     // Players 1-6, numbered from top counterclockwise
@@ -8,30 +10,45 @@ Board::Board()
     SetTopStart('1');
 
     // player 2
-    SetUpperLeftStart('2');
+    // SetUpperLeftStart('2');
 
-    // player 3
-    SetLowerLeftStart('3');
+    // // player 3
+    // SetLowerLeftStart('3');
 
-    // player 4
-    SetBottomStart('4');
+    // // player 4
+    // SetBottomStart('4');
 
-    // player 5
-    SetLowerRightStart('5');
+    // // player 5
+    // SetLowerRightStart('5');
 
-    // player 6
-    SetUpperRightStart('6');
+    // // player 6
+    // SetUpperRightStart('6');
 
-    // board center
-    SetCenter('o');
+    // // board center
+    // SetCenter('o');
 }
 
 void Board::SetTopStart(char c)
 {
-    int width = 4;
-    for (int r = -5; r >= -8; --r) {
-        for (int q = 4 - width + 1; q <= 4 ; ++q) {
-            _state[{q, r}] = c;
+    // int width = 4;
+    // for (int r = -5; r >= -8; --r) {
+    //     for (int q = 4 - width + 1; q <= 4 ; ++q) {
+    //         _state[{q, r}] = c;
+    //     }
+    //     --width;
+    // }
+
+    int width = 3; //width of home base
+    int rad = 3;  // center radius
+    // start at rad above center and move up, decreasing width of layer at each step
+    int y = width;
+    for (int z = -(rad+1); z >= -(2*rad); --z) {
+        for (int x = -y-z; x <= width; ++x) {
+            y = -x-z;
+            std::cout << x << " " << y << " " << z << std::endl;
+            CubePoint cube {x, y, z};
+            std::cout << cube << std::endl;
+            _state[cube] = 'a' + z;
         }
         --width;
     }
