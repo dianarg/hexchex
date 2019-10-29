@@ -65,6 +65,8 @@ class Board
         void SetCenter(char c);
 
         std::map<HexPoint, char> _state;
+        const int m_home_width;
+        const int m_radius; // center radius
 };
 
 #endif
